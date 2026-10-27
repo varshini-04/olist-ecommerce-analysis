@@ -1,0 +1,14 @@
+table,issue,rows_affected,decision
+customers,"customer_id is generated per order, not per person",3345,Use customer_unique_id for all customer-level analysis
+orders,Orders with no item rows (mostly unavailable / canceled),775,Excluded from revenue; kept in fact_orders with order_value = 0
+orders,Status 'delivered' but no delivery date,8,"Kept for revenue, excluded from delivery-time metrics"
+orders,Carrier pickup date earlier than purchase date (timestamp error),166,Carrier date not used in metrics; delivery time measured purchase -> customer delivery
+orders,Sparse months: Sep-Dec 2016 (launch) and Sep-Oct 2018 (data cut-off),349,Trend analysis limited to Jan 2017 - Aug 2018 (20 full months)
+products,Missing product category,610,Labelled 'unknown'
+translation,Categories with no English translation,2,"Translated manually (pc_gamer, portable_kitchen_food_processors)"
+products,Misspelled columns ('lenght'),2,Renamed to product_name_length / product_description_length
+reviews,Orders with more than one review,547,Keep the most recently answered review per order
+payments,payment_type = 'not_defined',3,Relabelled 'unknown'
+payments,payment_installments = 0,2,Set to 1 (a single payment)
+payments,Orders split across several payment rows (e.g. card + voucher),2961,Aggregated to one row per order; main payment type = the one with the largest value
+payments,"Payment total differs from item total by > R$1 (installment interest, vouchers)",249,Revenue measured from items (price + freight) - consistent with category-level analysis
